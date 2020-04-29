@@ -181,7 +181,7 @@ public:
 int main()
 {
 	olcEngine3D demo;
-	if (demo.ConstructConsole(236, 220, 2, 2))
+	if (demo.ConstructConsole(256, 240, 2, 2))
 		demo.Start();
 	return 0;
 }
