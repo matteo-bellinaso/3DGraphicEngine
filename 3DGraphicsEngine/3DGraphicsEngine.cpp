@@ -207,19 +207,16 @@ public:
 				normal.z * (triTranslated.p[0].z - vCamera.z) < 0.0f)
 			{
 
-				//add illumination
+				// Illumination
 				vec3d light_direction = { 0.0f, 0.0f, -1.0f };
-				float illumination_length = sqrtf(light_direction.x * light_direction.x +
-					light_direction.y * light_direction.y +
-					light_direction.z * light_direction.z);
+				float l = sqrtf(light_direction.x * light_direction.x + light_direction.y * light_direction.y + light_direction.z * light_direction.z);
+				light_direction.x /= l; light_direction.y /= l; light_direction.z /= l;
 
-				light_direction.x /= illumination_length;
-				light_direction.y /= illumination_length;
-				light_direction.z /= illumination_length;
+				// How similar is normal to light direction
+				float dp = normal.x * light_direction.x + normal.y * light_direction.y + normal.z * light_direction.z;
 
-				float dotProduct = normal.x * light_direction.x + normal.y * light_direction.y + normal.z * light_direction.z;
-
-				CHAR_INFO c = GetColour(dotProduct);
+				// Choose console colours as required (much easier with RGB)
+				CHAR_INFO c = GetColour(dp);
 				triTranslated.col = c.Attributes;
 				triTranslated.sym = c.Char.UnicodeChar;
 
@@ -227,10 +224,10 @@ public:
 				MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
 				MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
 				MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
-				triTranslated.col = c.Attributes;
-				triTranslated.sym = c.Char.UnicodeChar;
+				triProjected.col = triTranslated.col;
+				triProjected.sym = triTranslated.sym;
 
-				//section:  from world space to screen space.
+				// Scale into view
 				triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
 				triProjected.p[1].x += 1.0f; triProjected.p[1].y += 1.0f;
 				triProjected.p[2].x += 1.0f; triProjected.p[2].y += 1.0f;
